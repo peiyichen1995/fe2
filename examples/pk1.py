@@ -1,8 +1,14 @@
 import torch
 
-def foo(x, y):
-    return 2 * x + y
+torch.set_default_dtype(torch.float64)
 
-traced_foo = torch.jit.trace(foo, (torch.rand(3), torch.rand(3)))
+def PK1(F):
+    E = 0.5 * (torch.matmul(F.T,F)-torch.eye(3))
+    lambda_ = 4000
+    mu_ = 6700
+    PK2 = lambda_ * torch.trace(E) * torch.eye(3) + 2 * mu_ * E
+    return torch.matmul(F, PK2)
 
-traced_foo.save("traced_foo.pt")
+traced = torch.jit.trace(PK1, torch.zeros(3, 3))
+
+traced.save("PK1.pt")

@@ -9,6 +9,8 @@
 
 #include "TorchStress.h"
 
+registerMooseObject("fe2App", TorchStress);
+
 InputParameters
 TorchStress::validParams()
 {
@@ -17,7 +19,7 @@ TorchStress::validParams()
   return params;
 }
 
-ComputeLagrangianStressPK2::ComputeLagrangianStressPK2(const InputParameters & parameters)
+TorchStress::TorchStress(const InputParameters & parameters)
   : ComputeLagrangianStressPK1(parameters)
 {
   std::string file_name = getParam<std::string>("script");
@@ -25,7 +27,26 @@ ComputeLagrangianStressPK2::ComputeLagrangianStressPK2(const InputParameters & p
 }
 
 void
-ComputeLagrangianStressPK2::computeQpPK1Stress()
+TorchStress::computeQpPK1Stress()
 {
-  
+  double F_vals[9] = {_F[_qp](0, 0),
+                      _F[_qp](0, 1),
+                      _F[_qp](0, 2),
+                      _F[_qp](1, 0),
+                      _F[_qp](1, 1),
+                      _F[_qp](1, 2),
+                      _F[_qp](2, 0),
+                      _F[_qp](2, 1),
+                      _F[_qp](2, 2)};
+  torch::Tensor F = torch::from_blob(F_vals, {3, 3}, {torch::kFloat64});
+  torch::Tensor P_vals = module({F}).toTensor();
+  _pk1_stress[_qp] = RankTwoTensor(P_vals.index({0, 0}).item<double>(),
+                                   P_vals.index({1, 0}).item<double>(),
+                                   P_vals.index({2, 0}).item<double>(),
+                                   P_vals.index({0, 1}).item<double>(),
+                                   P_vals.index({1, 1}).item<double>(),
+                                   P_vals.index({2, 1}).item<double>(),
+                                   P_vals.index({0, 2}).item<double>(),
+                                   P_vals.index({1, 2}).item<double>(),
+                                   P_vals.index({2, 2}).item<double>());
 }

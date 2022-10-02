@@ -81,24 +81,42 @@
 []
 
 [Materials]
-  [compute_stress]
-    type = ComputeNeoHookeanStress
-    lambda = 4000.0
-    mu = 6700.0
+  # [C]
+  #   type = ComputeIsotropicElasticityTensor
+  #   lambda = 4000
+  #   shear_modulus = 6700
+  # []
+  # [compute_stress]
+  #   type = ComputeStVenantKirchhoffStress
+  # []
+  [stress]
+    type = TorchStress
+    script = 'PK1.pt'
   []
-# [stress]
-#   type = TorchStress
-#   script = 'xx.pt'
-# []
   [compute_strain]
     type = ComputeLagrangianStrain
+  []
+  [stress_xx]
+    type = RankTwoCartesianComponent
+    property_name = sxx
+    rank_two_tensor = pk1_stress
+    index_i = 0
+    index_j = 0
+  []
+[]
+
+[Postprocessors]
+  [sxx]
+    type = ElementIntegralMaterialProperty
+    mat_prop = sxx
   []
 []
 
 [Executioner]
   type = Transient
 
-  solve_type = 'newton'
+  # solve_type = 'newton'
+  solve_type = FD
   line_search = none
 
   petsc_options_iname = '-pc_type'
