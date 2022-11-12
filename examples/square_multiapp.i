@@ -117,13 +117,20 @@
   exodus = true
 []
 
-[MultiApps]
-  [sub]
-    type = QuadraturePointMultiApp
-    input_files = 'square_homo.i'
-    order = FIRST
-    family = LAGRANGE
-    qudrature_type = GAUSS
-    qudrature_order = SECOND
+[UserObjects]
+  [defF]
+    type = DeformationGradientUserObject
+    verbose = true
   []
 []
+
+# [MultiApps]
+#   [sub]
+#     type = QuadraturePointMultiApp
+#     input_files = 'square_homo.i'
+#     order = FIRST
+#     family = LAGRANGE
+#     qudrature_type = GAUSS
+#     qudrature_order = SECOND
+#   []
+# []
