@@ -276,9 +276,52 @@
 [Functions]
   [left_x_bc]
     type = ParsedFunction
-    value = 'alpha * y'
-    vars = 'alpha'
-    vals = hvar_target_xx
+    value = 'Fxy * y'
+    vars = 'Fxy'
+    vals = 'hvar_target_xy'
+  []
+  [left_y_bc]
+    type = ParsedFunction
+    value = '(Fyy - 1) * y'
+    vars = 'Fyy'
+    vals = 'hvar_target_yy'
+  []
+  [right_x_bc]
+    type = ParsedFunction
+    value = '(Fxx - 1) + Fxy * y'
+    vars = 'Fxx Fxy'
+    vals = 'hvar_target_xx hvar_target_xy'
+  []
+  [right_y_bc]
+    type = ParsedFunction
+    value = 'Fyx + (Fyy - 1) * y'
+    vars = 'Fyx Fyy'
+    vals = 'hvar_target_yx hvar_target_yy'
+  []
+  [top_x_bc]
+    type = ParsedFunction
+    value = '(Fxx - 1) * x + Fxy'
+    vars = 'Fxx Fxy'
+    vals = 'hvar_target_xx hvar_target_xy'
+  []
+  [top_y_bc]
+    type = ParsedFunction
+    value = 'Fyx * x + (Fyy - 1)'
+    vars = 'Fyx Fyy'
+    vals = 'hvar_target_yx hvar_target_yy'
+  []
+
+  [bottom_x_bc]
+    type = ParsedFunction
+    value = '(Fxx - 1) * x'
+    vars = 'Fxx'
+    vals = 'hvar_target_xx'
+  []
+  [bottom_y_bc]
+    type = ParsedFunction
+    value = 'Fyx * x'
+    vars = 'Fyx'
+    vals = 'hvar_target_yx'
   []
 []
 
@@ -294,43 +337,50 @@
     type = FunctionDirichletBC
     boundary = left
     variable = disp_y
-    function = '-0.02 * y'
+    # function = '-0.02 * y'
+    function = left_y_bc
   []
   [rightx]
     type = FunctionDirichletBC
     boundary = right
     variable = disp_x
-    function = '0.01 * y + 0.04'
+    # function = '0.01 * y + 0.04'
+    function = right_x_bc
   []
   [righty]
     type = FunctionDirichletBC
     boundary = right
     variable = disp_y
-    function = '-0.02 * y - 0.02'
+    # function = '-0.02 * y - 0.02'
+    function = right_y_bc
   []
   [topx]
     type = FunctionDirichletBC
     boundary = top
     variable = disp_x
-    function = '0.04 * x + 0.01'
+    # function = '0.04 * x + 0.01'
+    function = top_x_bc
   []
   [topy]
     type = FunctionDirichletBC
     boundary = top
     variable = disp_y
-    function = '-0.02 * x - 0.02'
+    # function = '-0.02 * x - 0.02'
+    function = top_y_bc
   []
   [botx]
     type = FunctionDirichletBC
     boundary = bottom
     variable = disp_x
-    function = '0.04 * x'
+    # function = '0.04 * x'
+    function = bottom_x_bc
   []
   [boty]
     type = FunctionDirichletBC
     boundary = bottom
     variable = disp_y
-    function = '-0.02 * x'
+    # function = '-0.02 * x'
+    function = bottom_y_bc
   []
 []
 [Materials]
