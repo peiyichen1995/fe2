@@ -88,6 +88,10 @@
 []
 
 [AuxVariables]
+  [hvar_target]
+    family = SCALAR
+    order = NINTH
+  []
   [s11]
     family = MONOMIAL
     order = CONSTANT

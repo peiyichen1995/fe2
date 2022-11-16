@@ -20,6 +20,42 @@
 []
 
 [AuxVariables]
+  [hvar_target_xx]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_xy]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_xz]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_yx]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_yy]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_yz]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_zx]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_zy]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_zz]
+    family = SCALAR
+    order = FIRST
+  []
   [s11]
     family = MONOMIAL
     order = CONSTANT
@@ -236,12 +272,23 @@
     component = 1
   []
 []
+
+[Functions]
+  [left_x_bc]
+    type = ParsedFunction
+    value = 'alpha * y'
+    vars = 'alpha'
+    vals = hvar_target_xx
+  []
+[]
+
 [BCs]
   [leftx]
     type = FunctionDirichletBC
     boundary = left
     variable = disp_x
-    function = '0.01 * y'
+    # function = '0.01 * y'
+    function = left_x_bc
   []
   [lefty]
     type = FunctionDirichletBC

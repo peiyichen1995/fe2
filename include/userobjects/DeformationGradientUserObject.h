@@ -31,6 +31,7 @@ public:
   virtual void execute() override;
   virtual void threadJoin(const UserObject & y) override;
   virtual void finalize() override;
+  RankTwoTensor getDeformationGradient(const Point & p) const;
 
 protected:
   const MaterialProperty<RankTwoTensor> & _F;
@@ -38,4 +39,6 @@ protected:
   std::unordered_map<Point, RankTwoTensor> _qp_deformation_gradient_map;
 
   bool _verbose;
+
+  bool _ready;
 };

@@ -27,7 +27,8 @@ DeformationGradientUserObject::validParams()
 DeformationGradientUserObject::DeformationGradientUserObject(const InputParameters & parameters)
   : ElementUserObject(parameters),
     _F(getMaterialPropertyByName<RankTwoTensor>("deformation_gradient")),
-    _verbose(getParam<bool>("verbose"))
+    _verbose(getParam<bool>("verbose")),
+    _ready(false)
 {
 }
 
@@ -57,6 +58,7 @@ DeformationGradientUserObject::threadJoin(const UserObject & y)
 void
 DeformationGradientUserObject::finalize()
 {
+  _ready = true;
   if (_verbose)
   {
     for (auto & [key, value] : _qp_deformation_gradient_map)
@@ -67,4 +69,21 @@ DeformationGradientUserObject::finalize()
       _console << std::endl;
     }
   }
+}
+
+RankTwoTensor
+DeformationGradientUserObject::getDeformationGradient(const Point & p) const
+{
+  if (!_ready)
+  {
+    return RankTwoTensor::Identity();
+  }
+  for (auto & [point, def_grad] : _qp_deformation_gradient_map)
+  {
+    if (point.absolute_fuzzy_equals(p))
+    {
+      return def_grad;
+    }
+  }
+  mooseError("No quadrature point found in deformation gradient user object. Point: ", p);
 }

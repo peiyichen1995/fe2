@@ -16,8 +16,8 @@
   [msh]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 3
-    ny = 3
+    nx = 1
+    ny = 1
   []
 []
 
@@ -111,6 +111,7 @@
   dt = 1.0
   dtmin = 1.0
   end_time = 1.0
+  # fixed_point_algorithm = picard
 []
 
 [Outputs]
@@ -120,17 +121,28 @@
 [UserObjects]
   [defF]
     type = DeformationGradientUserObject
-    verbose = true
+    verbose = false
+    execute_on = NONLINEAR
   []
 []
 
-# [MultiApps]
-#   [sub]
-#     type = QuadraturePointMultiApp
-#     input_files = 'square_homo.i'
-#     order = FIRST
-#     family = LAGRANGE
-#     qudrature_type = GAUSS
-#     qudrature_order = SECOND
-#   []
-# []
+[MultiApps]
+  [sub]
+    type = QuadraturePointMultiApp
+    input_files = 'square_homo_dbc.i'
+    order = FIRST
+    family = LAGRANGE
+    qudrature_type = GAUSS
+    qudrature_order = SECOND
+    execute_on = TIMESTEP_END
+  []
+[]
+
+[Transfers]
+  [FE2]
+    type = FE2Transfer
+    def_grad_uo = defF
+    def_grad_scalars = 'hvar_target_xx hvar_target_xy hvar_target_xz hvar_target_yx hvar_target_yy hvar_target_yz hvar_target_zx hvar_target_zy hvar_target_zz'
+    to_multi_app = sub
+  []
+[]
