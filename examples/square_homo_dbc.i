@@ -497,7 +497,8 @@
   []
 []
 [Executioner]
-  type = Transient
+  # type = Transient
+  type = Steady
   solve_type = 'newton'
   #   solve_type = FD
   line_search = none
@@ -508,12 +509,9 @@
   nl_max_its = 10
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
-  start_time = 0.0
-  dt = 1.0
-  dtmin = 1.0
-  end_time = 1.0
 []
 [Outputs]
   exodus = true
   csv = true
+  console = false
 []

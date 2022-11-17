@@ -9,13 +9,13 @@
 
 #pragma once
 
-#include "TransientMultiApp.h"
+#include "FullSolveMultiApp.h"
 #include "BlockRestrictable.h"
 
 /**
  * Automatically generates Sub-App positions from centroids of elements in the master mesh.
  */
-class QuadraturePointMultiApp : public TransientMultiApp, public BlockRestrictable
+class QuadraturePointMultiApp : public FullSolveMultiApp, public BlockRestrictable
 {
 public:
   static InputParameters validParams();

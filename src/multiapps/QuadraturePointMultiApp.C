@@ -22,7 +22,7 @@ registerMooseObject("MooseApp", QuadraturePointMultiApp);
 InputParameters
 QuadraturePointMultiApp::validParams()
 {
-  InputParameters params = TransientMultiApp::validParams();
+  InputParameters params = FullSolveMultiApp::validParams();
   params += BlockRestrictable::validParams();
   params.addClassDescription("Automatically generates Sub-App positions from quadrature points of "
                              "elements in the parent app "
@@ -63,7 +63,7 @@ QuadraturePointMultiApp::validParams()
 }
 
 QuadraturePointMultiApp::QuadraturePointMultiApp(const InputParameters & parameters)
-  : TransientMultiApp(parameters), BlockRestrictable(this)
+  : FullSolveMultiApp(parameters), BlockRestrictable(this)
 {
 }
 
