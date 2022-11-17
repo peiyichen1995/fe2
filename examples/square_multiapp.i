@@ -122,7 +122,11 @@
   [defF]
     type = DeformationGradientUserObject
     verbose = false
-    execute_on = NONLINEAR
+    execute_on = LINEAR
+  []
+  [pk1]
+    type = PK1StressUserObject
+    execute_on = NONE
   []
 []
 
@@ -134,15 +138,22 @@
     family = LAGRANGE
     qudrature_type = GAUSS
     qudrature_order = SECOND
-    execute_on = TIMESTEP_END
+    execute_on = LINEAR
   []
 []
 
 [Transfers]
-  [FE2]
-    type = FE2Transfer
+  [FE2_deformation_gradient]
+    type = FE2DeformationGradientTransfer
     def_grad_uo = defF
     def_grad_scalars = 'hvar_target_xx hvar_target_xy hvar_target_xz hvar_target_yx hvar_target_yy hvar_target_yz hvar_target_zx hvar_target_zy hvar_target_zz'
     to_multi_app = sub
+  []
+  [FE2_pk1_stress]
+    type = FE2PK1StressTransfer
+    pk1_stress_uo = pk1
+    pk1_stress_components = 's11 s12 s13 s21 s22 s23 s31 s32 s33'
+    from_multi_app = sub
+    verbose = true
   []
 []

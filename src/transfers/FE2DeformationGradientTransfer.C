@@ -7,7 +7,7 @@
 //* Licensed under LGPL 2.1, please see LICENSE for details
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
-#include "FE2Transfer.h"
+#include "FE2DeformationGradientTransfer.h"
 
 // MOOSE includes
 #include "FEProblem.h"
@@ -22,10 +22,10 @@
 #include "RankTwoTensor.h"
 
 // Define the input parameters
-registerMooseObject("fe2App", FE2Transfer);
+registerMooseObject("fe2App", FE2DeformationGradientTransfer);
 
 InputParameters
-FE2Transfer::validParams()
+FE2DeformationGradientTransfer::validParams()
 {
   InputParameters params = MultiAppTransfer::validParams();
   params.addClassDescription("Transfers data from a scalar variable to an auxiliary scalar "
@@ -38,7 +38,7 @@ FE2Transfer::validParams()
   return params;
 }
 
-FE2Transfer::FE2Transfer(const InputParameters & parameters)
+FE2DeformationGradientTransfer::FE2DeformationGradientTransfer(const InputParameters & parameters)
   : MultiAppTransfer(parameters),
     _uo_name(getParam<UserObjectName>("def_grad_uo")),
     _scalar_names(getParam<std::vector<VariableName>>("def_grad_scalars"))
@@ -46,7 +46,7 @@ FE2Transfer::FE2Transfer(const InputParameters & parameters)
 }
 
 void
-FE2Transfer::execute()
+FE2DeformationGradientTransfer::execute()
 {
   TIME_SECTION("FE2Transfer::execute()", 5, "Performing a scalar variable transfer");
 

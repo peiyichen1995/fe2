@@ -15,12 +15,12 @@
 /**
  * Copies the value of a SCALAR variable from one App to another.
  */
-class FE2Transfer : public MultiAppTransfer
+class FE2PK1StressTransfer : public MultiAppTransfer
 {
 public:
   static InputParameters validParams();
 
-  FE2Transfer(const InputParameters & parameters);
+  FE2PK1StressTransfer(const InputParameters & parameters);
 
   /// Execute the transfer
   virtual void execute() override;
@@ -30,5 +30,7 @@ protected:
   UserObjectName _uo_name;
 
   /// The name of the auxiliary scalar variable to which the scalar values are being transfered
-  std::vector<VariableName> _scalar_names;
+  std::vector<PostprocessorName> _pp_names;
+
+  bool _verbose;
 };
