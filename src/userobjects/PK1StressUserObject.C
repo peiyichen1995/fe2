@@ -38,7 +38,7 @@ PK1StressUserObject::execute()
 }
 
 void
-PK1StressUserObject::threadJoin(const UserObject & y)
+PK1StressUserObject::threadJoin(const UserObject & /*y*/)
 {
 }
 

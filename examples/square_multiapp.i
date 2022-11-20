@@ -70,8 +70,12 @@
     lambda = 4000
     shear_modulus = 6700
   []
-  [compute_stress]
-    type = ComputeStVenantKirchhoffStress
+  # [compute_stress]
+  #   type = ComputeStVenantKirchhoffStress
+  # []
+  [stress]
+    type = FE2PK1Stress
+    pk1_stress_uo = pk1
   []
   [compute_strain]
     type = ComputeLagrangianStrain
@@ -98,8 +102,8 @@
   solve_type = 'newton'
   line_search = none
 
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
+  petsc_options_iname = '-pc_type -snes_divergence_tolerance'
+  petsc_options_value = 'lu -1'
 
   l_max_its = 2
   l_tol = 1e-14
@@ -112,6 +116,7 @@
   dtmin = 1.0
   end_time = 1.0
   # fixed_point_algorithm = picard
+  nl_forced_its = 1
 []
 
 [Outputs]
@@ -154,6 +159,6 @@
     pk1_stress_uo = pk1
     pk1_stress_components = 's11 s12 s13 s21 s22 s23 s31 s32 s33'
     from_multi_app = sub
-    verbose = true
+    verbose = false
   []
 []
