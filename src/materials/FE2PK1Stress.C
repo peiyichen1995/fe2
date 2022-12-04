@@ -15,7 +15,7 @@ InputParameters
 FE2PK1Stress::validParams()
 {
   InputParameters params = ComputeLagrangianStressPK1::validParams();
-  params.addRequiredParam<UserObjectName>("pk1_stress_uo", "The name of the pk1 stress userobject");
+  params.addRequiredParam<UserObjectName>("fe2_uo", "The name of the fe2 userobject");
   params.addParam<MaterialPropertyName>(
       "elasticity_tensor", "elasticity_tensor", "The name of the elasticity tensor.");
   return params;
@@ -23,7 +23,7 @@ FE2PK1Stress::validParams()
 
 FE2PK1Stress::FE2PK1Stress(const InputParameters & parameters)
   : ComputeLagrangianStressPK1(parameters),
-    _uo(getUserObject<PK1StressUserObject>("pk1_stress_uo")),
+    _uo(const_cast<FE2UserObject &>(getUserObject<FE2UserObject>("fe2_uo"))),
     _elasticity_tensor_name(getParam<MaterialPropertyName>("elasticity_tensor")),
     _elasticity_tensor(getMaterialProperty<RankFourTensor>(_elasticity_tensor_name))
 {
@@ -32,7 +32,15 @@ FE2PK1Stress::FE2PK1Stress(const InputParameters & parameters)
 void
 FE2PK1Stress::computeQpPK1Stress()
 {
-  _pk1_stress[_qp] = _uo.getPK1Stress(_q_point[_qp]);
+  // step 1: write current deformation to user object
+  _uo.F = _F[_qp];
+  // step 2: execute a custom execution flag (transfer deformation, run subapp, transfer pk1 stress
+  // back)
+  _fe_problem.execMultiAppTransfers(FE2::EXEC_FE2, MultiAppTransfer::TO_MULTIAPP);
+  _fe_problem.execMultiApps(FE2::EXEC_FE2);
+  _fe_problem.execMultiAppTransfers(FE2::EXEC_FE2, MultiAppTransfer::FROM_MULTIAPP);
+  // step 3: read pk1 stress from user object
+  _pk1_stress[_qp] = _uo.P;
 
   // approximate jocobian
   usingTensorIndices(i_, j_, k_, l_);

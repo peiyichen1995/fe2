@@ -96,7 +96,7 @@ QuadraturePointMultiApp::fillPositions()
   for (auto & elem : mesh.active_local_element_ptr_range())
   {
     fe->reinit(elem);
-    for (auto i = 0; i < q_points.size(); ++i)
+    for (size_t i = 0; i < q_points.size(); ++i)
     {
       _positions.push_back(q_points[i]);
     }
@@ -105,7 +105,7 @@ QuadraturePointMultiApp::fillPositions()
   // Use the comm from the problem this MultiApp is part of
   libMesh::ParallelObject::comm().allgather(_positions);
 
-  for (int i = 0; i < _positions.size(); i++)
+  for (size_t i = 0; i < _positions.size(); i++)
   {
     std::cout << "Point " << i << ": " << _positions[i] << std::endl;
   }

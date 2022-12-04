@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ComputeLagrangianStressPK1.h"
-#include "PK1StressUserObject.h"
+#include "FE2UserObject.h"
+#include "fe2Types.h"
 
 /// Native interface for providing the 2nd Piola Kirchhoff stress
 ///
@@ -22,7 +23,7 @@ public:
 protected:
   /// Wrap PK2 -> PK1
   virtual void computeQpPK1Stress() override;
-  const PK1StressUserObject & _uo;
+  FE2UserObject & _uo;
   const MaterialPropertyName _elasticity_tensor_name;
   const MaterialProperty<RankFourTensor> & _elasticity_tensor;
 };

@@ -72,7 +72,7 @@ FE2PK1StressTransfer::execute()
         if (multi_app->hasLocalApp(i))
         {
           RankTwoTensor pk1;
-          for (int j = 0; j < _pp_names.size(); j++)
+          for (size_t j = 0; j < _pp_names.size(); j++)
           {
             const Real & curr_pp_value =
                 multi_app->appProblemBase(i).getPostprocessorValueByName(_pp_names[j]);

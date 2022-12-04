@@ -4,23 +4,20 @@
   displacements = 'disp_x disp_y'
   large_kinematics = true
 []
-
 [Variables]
   [disp_x]
   []
   [disp_y]
   []
 []
-
 [Mesh]
   [msh]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 5
-    ny = 5
+    nx = 25
+    ny = 25
   []
 []
-
 [Kernels]
   [sdx]
     type = TotalLagrangianStressDivergence
@@ -33,14 +30,12 @@
     component = 1
   []
 []
-
 [Functions]
   [strain]
     type = ParsedFunction
     value = 't'
   []
 []
-
 [BCs]
   [leftx]
     type = DirichletBC
@@ -63,16 +58,14 @@
     function = strain
   []
 []
-
 [Materials]
   [C]
     type = ComputeIsotropicElasticityTensor
     lambda = 4000
     shear_modulus = 6700
   []
-  [stress]
-    type = FE2PK1Stress
-    fe2_uo = fe2
+  [compute_stress]
+    type = ComputeStVenantKirchhoffStress
   []
   [compute_strain]
     type = ComputeLagrangianStrain
@@ -85,58 +78,25 @@
     index_j = 0
   []
 []
-
 [Postprocessors]
   [sxx]
     type = ElementIntegralMaterialProperty
     mat_prop = sxx
   []
 []
-
 [Executioner]
   type = Transient
-
   solve_type = 'newton'
   line_search = none
-
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-
   nl_max_its = 50
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
-
   start_time = 0.0
   dt = 0.01
   end_time = 0.01
 []
-
 [Outputs]
   exodus = true
-  perf_graph_live = false
-[]
-
-[UserObjects]
-  [fe2]
-    type = FE2UserObject
-  []
-[]
-
-[MultiApps]
-  [sub]
-    type = MicroScaleMultiApp
-    input_files = 'square_homo_dbc.i'
-    max_procs_per_app = 1
-  []
-[]
-
-[Transfers]
-  [FE2_transfer]
-    type = FE2Transfer
-    fe2_uo = fe2
-    def_grad_scalars = 'hvar_target_xx hvar_target_xy hvar_target_xz hvar_target_yx hvar_target_yy hvar_target_yz hvar_target_zx hvar_target_zy hvar_target_zz'
-    pk1_stress_components = 's11 s12 s13 s21 s22 s23 s31 s32 s33'
-    to_multi_app = sub
-    from_multi_app = sub
-  []
 []
