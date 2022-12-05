@@ -33,6 +33,8 @@
   []
   [error]
   []
+  [ref_sol]
+  []
 []
 
 [AuxKernels]
@@ -71,6 +73,13 @@
     function = '(fe2_disp_x - macro_disp_x)^2 + (fe2_disp_y - macro_disp_y)^2'
     execute_on = 'INITIAL'
   []
+  [ref_sol]
+    type = ParsedAux
+    variable = ref_sol
+    args = 'macro_disp_x macro_disp_y'
+    function = 'sqrt((macro_disp_x)^2 + (macro_disp_y)^2)'
+    execute_on = 'INITIAL'
+  []
 []
 
 [Postprocessors]
@@ -82,6 +91,15 @@
     type = ParsedPostprocessor
     pp_names = error_squared
     function = 'sqrt(error_squared)'
+  []
+  [ref_sol]
+    type = ElementIntegralVariablePostprocessor
+    variable = ref_sol
+  []
+  [normalized_error]
+    type = ParsedPostprocessor
+    pp_names = 'error ref_sol'
+    function = 'error / ref_sol'
   []
 []
 
