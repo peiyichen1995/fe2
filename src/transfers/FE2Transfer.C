@@ -61,6 +61,7 @@ FE2Transfer::execute()
 
         // swapper.forceSwap();
         RankTwoTensor F = userobject.F;
+        Real material_property = userobject.material_property;
         // swapper.forceSwap();
 
         for (unsigned int ii = 0; ii < 3; ii++)
@@ -83,6 +84,21 @@ FE2Transfer::execute()
             variable->sys().solution().close();
           }
         }
+
+        // Get reference to the scalar variable that will be written
+        MooseVariableScalar * variable =
+            &getToMultiApp()->appProblemBase(0).getScalarVariable(_tid, _scalar_names[9]);
+        variable->reinit();
+
+        // Determine number of DOFs that we're going to read and write
+        auto && to_dof = variable->dofIndices();
+
+        // Check that the DOF matches
+        if (to_dof.size() != 1)
+          mooseError("Order of SCALAR variables must be 1!");
+
+        variable->sys().solution().set(to_dof[0], material_property);
+        variable->sys().solution().close();
       }
       break;
     }

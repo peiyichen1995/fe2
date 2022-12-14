@@ -56,6 +56,10 @@
     family = SCALAR
     order = FIRST
   []
+  [mu1]
+    family = SCALAR
+    order = FIRST
+  []
   [s11]
     family = MONOMIAL
     order = CONSTANT
@@ -384,9 +388,14 @@
   []
 []
 [Materials]
+  # [C]
+  #   type = ComputeIsotropicElasticityTensor
+  #   lambda = 4000
+  #   shear_modulus = 6700
+  # []
   [C]
-    type = ComputeIsotropicElasticityTensor
-    lambda = 4000
+    type = CustomIsotropicElasticityTensor
+    lambda = 'mu1'
     shear_modulus = 6700
   []
   [compute_stress]

@@ -26,4 +26,5 @@ protected:
   FE2UserObject & _uo;
   const MaterialPropertyName _elasticity_tensor_name;
   const MaterialProperty<RankFourTensor> & _elasticity_tensor;
+  const MaterialProperty<Real> & _mu1;
 };

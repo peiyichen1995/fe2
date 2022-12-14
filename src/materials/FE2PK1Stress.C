@@ -25,7 +25,8 @@ FE2PK1Stress::FE2PK1Stress(const InputParameters & parameters)
   : ComputeLagrangianStressPK1(parameters),
     _uo(const_cast<FE2UserObject &>(getUserObject<FE2UserObject>("fe2_uo"))),
     _elasticity_tensor_name(getParam<MaterialPropertyName>("elasticity_tensor")),
-    _elasticity_tensor(getMaterialProperty<RankFourTensor>(_elasticity_tensor_name))
+    _elasticity_tensor(getMaterialProperty<RankFourTensor>(_elasticity_tensor_name)),
+    _mu1(getMaterialProperty<Real>("mu1"))
 {
 }
 
@@ -34,6 +35,7 @@ FE2PK1Stress::computeQpPK1Stress()
 {
   // step 1: write current deformation to user object
   _uo.F = _F[_qp];
+  _uo.material_property = _mu1[_qp];
   // step 2: execute a custom execution flag (transfer deformation, run subapp, transfer pk1 stress
   // back)
   _fe_problem.execMultiAppTransfers(FE2::EXEC_FE2, MultiAppTransfer::TO_MULTIAPP);
