@@ -11,6 +11,7 @@
 
 #include "FE2UserObject.h"
 #include "RankTwoTensor.h"
+#include "AverageRankFourTensor.h"
 
 // Define the input parameters
 registerMooseObject("fe2App", FE2Transfer);
@@ -19,24 +20,32 @@ InputParameters
 FE2Transfer::validParams()
 {
   InputParameters params = MultiAppTransfer::validParams();
+  params += TransientInterface::validParams();
   params.addClassDescription("Transfers data from a scalar variable to an auxiliary scalar "
                              "variable from different applications.");
   params.addRequiredParam<UserObjectName>("fe2_uo", "The name of the fe2 userobject");
   params.addRequiredParam<std::vector<VariableName>>("def_grad_scalars",
                                                      "The name of the scalar variables to "
                                                      "transfer the value to.");
+  params.addRequiredParam<std::vector<VariableName>>("translation_scalars",
+                                                     "The name of the scalar variables to "
+                                                     "transfer the translation values to.");
   params.addRequiredParam<std::vector<PostprocessorName>>(
       "pk1_stress_components",
       "The name of the postprocessors of the pk1 stress components to "
       "transfer the value from.");
+  params.addRequiredParam<std::string>("FE2Exodus_name", "name of the exodus output object");
   return params;
 }
 
 FE2Transfer::FE2Transfer(const InputParameters & parameters)
   : MultiAppTransfer(parameters),
+    TransientInterface(this),
     _uo_name(getParam<UserObjectName>("fe2_uo")),
     _scalar_names(getParam<std::vector<VariableName>>("def_grad_scalars")),
-    _pp_names(getParam<std::vector<PostprocessorName>>("pk1_stress_components"))
+    _translation_names(getParam<std::vector<VariableName>>("translation_scalars")),
+    _pp_names(getParam<std::vector<PostprocessorName>>("pk1_stress_components")),
+    _exo_name(getParam<std::string>("FE2Exodus_name"))
 {
 }
 
@@ -61,9 +70,10 @@ FE2Transfer::execute()
 
         // swapper.forceSwap();
         RankTwoTensor F = userobject.F;
-        Real material_property = userobject.material_property;
+        Point translation = userobject.translation;
         // swapper.forceSwap();
 
+        // transfer deformation gradients
         for (unsigned int ii = 0; ii < 3; ii++)
         {
           for (unsigned int jj = 0; jj < 3; jj++)
@@ -85,20 +95,32 @@ FE2Transfer::execute()
           }
         }
 
-        // Get reference to the scalar variable that will be written
-        MooseVariableScalar * variable =
-            &getToMultiApp()->appProblemBase(0).getScalarVariable(_tid, _scalar_names[9]);
-        variable->reinit();
+        // transfer translation scalars
+        for (auto i : index_range(_translation_names))
+        {
+          MooseVariableScalar * variable =
+              &getToMultiApp()->appProblemBase(0).getScalarVariable(_tid, _translation_names[i]);
+          variable->reinit();
 
-        // Determine number of DOFs that we're going to read and write
-        auto && to_dof = variable->dofIndices();
+          // Determine number of DOFs that we're going to read and write
+          auto && to_dof = variable->dofIndices();
 
-        // Check that the DOF matches
-        if (to_dof.size() != 1)
-          mooseError("Order of SCALAR variables must be 1!");
+          // Check that the DOF matches
+          if (to_dof.size() != 1)
+            mooseError("Order of SCALAR variables must be 1!");
 
-        variable->sys().solution().set(to_dof[0], material_property);
-        variable->sys().solution().close();
+          variable->sys().solution().set(to_dof[0], translation(i));
+          variable->sys().solution().close();
+        }
+
+        // configure output object
+        FE2Exodus * fe2exo = getToMultiApp()
+                                 ->appProblemBase(0)
+                                 .getMooseApp()
+                                 .getOutputWarehouse()
+                                 .getOutput<FE2Exodus>(_exo_name);
+        fe2exo->time_step = _t_step;
+        fe2exo->translation = translation;
       }
       break;
     }
@@ -115,6 +137,7 @@ FE2Transfer::execute()
 
         FE2UserObject & userobject = const_cast<FE2UserObject &>(const_userobject);
 
+        // Transfer PK1
         RankTwoTensor pk1;
         for (size_t j = 0; j < _pp_names.size(); j++)
         {

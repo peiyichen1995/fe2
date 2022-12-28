@@ -21,10 +21,9 @@ public:
   FE2PK1Stress(const InputParameters & parameters);
 
 protected:
-  /// Wrap PK2 -> PK1
   virtual void computeQpPK1Stress() override;
+  virtual void computeQpMicroscaleTranslation();
+  virtual RankTwoTensor microscalePK1Stress(const RankTwoTensor & F);
+
   FE2UserObject & _uo;
-  const MaterialPropertyName _elasticity_tensor_name;
-  const MaterialProperty<RankFourTensor> & _elasticity_tensor;
-  const MaterialProperty<Real> & _mu1;
 };

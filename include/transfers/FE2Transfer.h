@@ -2,8 +2,10 @@
 
 // MOOSE includes
 #include "MultiAppTransfer.h"
+#include "TransientInterface.h"
+#include "FE2Exodus.h"
 
-class FE2Transfer : public MultiAppTransfer
+class FE2Transfer : public MultiAppTransfer, TransientInterface
 {
 public:
   static InputParameters validParams();
@@ -20,6 +22,12 @@ protected:
   /// The name of the auxiliary scalar variable to which the scalar values are being transfered
   std::vector<VariableName> _scalar_names;
 
+  // The name of the auxiliary scalar variable to which the translation scalar values are being
+  // transfered
+  std::vector<VariableName> _translation_names;
+
   /// The name of the auxiliary scalar variable to which the scalar values are being transfered
   std::vector<PostprocessorName> _pp_names;
+
+  std::string _exo_name;
 };

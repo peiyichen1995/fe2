@@ -1,8 +1,6 @@
 [GlobalParams]
   displacements = 'disp_x disp_y'
   large_kinematics = true
-  macro_gradient = hvar
-  homogenization_constraint = homogenization
 []
 
 [Variables]
@@ -10,87 +8,61 @@
   []
   [disp_y]
   []
-  [hvar]
-    family = SCALAR
-    order = FOURTH
-  []
 []
 
 [Mesh]
   [msh]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 1
-    ny = 1
+    nx = ${n}
+    ny = ${n}
+    xmin = '${fparse -h/4}'
+    xmax = '${fparse h/4}'
+    ymin = '${fparse -h/4}'
+    ymax = '${fparse h/4}'
   []
-[]
-
-[UserObjects]
-  [homogenization]
-    type = HomogenizationConstraint
-    constraint_types = 'strain strain none strain strain none none none none'
-    targets = '0.04 -0.02 0.01 -0.02'
-    execute_on = 'INITIAL LINEAR NONLINEAR'
-  []
-[]
-
-[Kernels]
-  [sdx]
-    type = HomogenizedTotalLagrangianStressDivergence
-    variable = disp_x
-    component = 0
-  []
-  [sdy]
-    type = HomogenizedTotalLagrangianStressDivergence
-    variable = disp_y
-    component = 1
-  []
-[]
-
-[ScalarKernels]
-  [enforce]
-    type = HomogenizationConstraintScalarKernel
-    variable = hvar
-  []
-[]
-
-[BCs]
-  [Periodic]
-    [x]
-      variable = disp_x
-      auto_direction = 'x y'
-    []
-    [y]
-      variable = disp_y
-      auto_direction = 'x y'
-    []
-  []
-
-  # [fix1_x]
-  #   type = DirichletBC
-  #   boundary = "fix1"
-  #   variable = disp_x
-  #   value = 0
-  # []
-  # [fix1_y]
-  #   type = DirichletBC
-  #   boundary = "fix1"
-  #   variable = disp_y
-  #   value = 0
-  # []
-
-  # [fix2_y]
-  #   type = DirichletBC
-  #   boundary = "fix2"
-  #   variable = disp_y
-  #   value = 0
-  # []
 []
 
 [AuxVariables]
-  [hvar_target]
+  [t_step]
     family = SCALAR
-    order = NINTH
+    order = FIRST
+  []
+  [hvar_target_xx]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_xy]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_xz]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_yx]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_yy]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_yz]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_zx]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_zy]
+    family = SCALAR
+    order = FIRST
+  []
+  [hvar_target_zz]
+    family = SCALAR
+    order = FIRST
   []
   [s11]
     family = MONOMIAL
@@ -164,6 +136,22 @@
   [F33]
     family = MONOMIAL
     order = CONSTANT
+  []
+
+  [gamma]
+  []
+
+  [transl_x]
+    family = SCALAR
+    order = FIRST
+  []
+  [transl_y]
+    family = SCALAR
+    order = FIRST
+  []
+  [transl_z]
+    family = SCALAR
+    order = FIRST
   []
 []
 
@@ -295,12 +283,75 @@
     index_i = 2
     index_j = 2
   []
+
+  [gamma]
+    type = FE2SolutionAux
+    solution = stochastic_field
+    variable = gamma
+    from_variable = gamma
+    execute_on = 'LINEAR'
+    scale_factor = 100
+    add_factor = 9000
+  []
+[]
+
+[Kernels]
+  [sdx]
+    type = TotalLagrangianStressDivergence
+    variable = disp_x
+    component = 0
+  []
+  [sdy]
+    type = TotalLagrangianStressDivergence
+    variable = disp_y
+    component = 1
+  []
+[]
+
+[Functions]
+  [ux]
+    type = ParsedFunction
+    value = '(Fxx - 1) * x + Fxy * y'
+    vars = 'Fxx Fxy'
+    vals = 'hvar_target_xx hvar_target_xy'
+  []
+  [uy]
+    type = ParsedFunction
+    value = '(Fyy - 1) * y + Fyx * x'
+    vars = 'Fyy Fyx'
+    vals = 'hvar_target_yy hvar_target_yx'
+  []
+[]
+
+[BCs]
+  [x]
+    type = FunctionDirichletBC
+    boundary = 'left right top bottom'
+    variable = disp_x
+    function = ux
+  []
+  [y]
+    type = FunctionDirichletBC
+    boundary = 'left right top bottom'
+    variable = disp_y
+    function = uy
+  []
+[]
+
+[UserObjects]
+  [stochastic_field]
+    type = FE2SolutionUserObject
+    mesh = 'gamma.e'
+    execute_on = 'INITIAL'
+    timestep = 'LATEST'
+    translation_scalar_vars = 'transl_x transl_y transl_z'
+  []
 []
 
 [Materials]
   [C]
-    type = ComputeIsotropicElasticityTensor
-    lambda = 4000
+    type = CustomIsotropicElasticityTensor
+    lambda = 'gamma'
     shear_modulus = 6700
   []
   [compute_stress]
@@ -308,17 +359,6 @@
   []
   [compute_strain]
     type = ComputeLagrangianStrain
-    homogenization_gradient_names = 'homogenization_gradient'
-  []
-  [compute_homogenization_gradient]
-    type = ComputeHomogenizedLagrangianStrain
-  []
-  [stress_xx]
-    type = RankTwoCartesianComponent
-    property_name = sxx
-    rank_two_tensor = pk1_stress
-    index_i = 0
-    index_j = 0
   []
 []
 
@@ -417,28 +457,26 @@
 []
 
 [Executioner]
-  type = Transient
-
+  type = Steady
   solve_type = 'newton'
-  # solve_type = FD
   line_search = none
-
+  automatic_scaling = true
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-
-  l_max_its = 2
-  l_tol = 1e-14
-  nl_max_its = 10
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-
-  start_time = 0.0
-  dt = 1.0
-  dtmin = 1.0
-  end_time = 1.0
+  nl_max_its = 25
+  nl_rel_tol = 1e-10
+  nl_abs_tol = 1e-12
 []
 
 [Outputs]
-  exodus = true
-  csv = true
+  [exo]
+    type = FE2Exodus
+    file_base = 'visualization/out'
+  []
+  console = false
+  # [console]
+  #   type = Console
+  #   execute_postprocessors_on = 'none'
+  #   execute_scalars_on = 'none'
+  # []
 []

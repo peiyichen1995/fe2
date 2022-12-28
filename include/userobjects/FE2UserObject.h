@@ -17,5 +17,6 @@ public:
 
   RankTwoTensor F;
   RankTwoTensor P;
-  Real material_property;
+  Point translation;
+  RankFourTensor dPdF;
 };
