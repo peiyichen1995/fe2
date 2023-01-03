@@ -290,8 +290,8 @@
     variable = gamma
     from_variable = gamma
     execute_on = 'LINEAR'
-    scale_factor = 100
-    add_factor = 9000
+    # scale_factor = 100
+    # add_factor = 9000
   []
 []
 
@@ -341,7 +341,7 @@
 [UserObjects]
   [stochastic_field]
     type = FE2SolutionUserObject
-    mesh = 'gamma.e'
+    mesh = 'gamma_0.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
     translation_scalar_vars = 'transl_x transl_y transl_z'
