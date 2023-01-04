@@ -2,6 +2,7 @@
 
 #include "ComputeLagrangianStressPK1.h"
 #include "FE2UserObject.h"
+#include "DeformationGradientPK1StressUserObject.h"
 #include "fe2Types.h"
 
 /// Native interface for providing the 2nd Piola Kirchhoff stress
@@ -26,4 +27,5 @@ protected:
   virtual RankTwoTensor microscalePK1Stress(const RankTwoTensor & F);
 
   FE2UserObject & _uo;
+  DeformationGradientPK1StressUserObject & _uo_F_pk1;
 };

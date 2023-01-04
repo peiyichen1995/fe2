@@ -16,12 +16,16 @@ FE2PK1Stress::validParams()
 {
   InputParameters params = ComputeLagrangianStressPK1::validParams();
   params.addRequiredParam<UserObjectName>("fe2_uo", "The name of the fe2 userobject");
+  params.addRequiredParam<UserObjectName>(
+      "f_pk1_uo", "The name of the deformation gradient and pk1 stress userobject");
   return params;
 }
 
 FE2PK1Stress::FE2PK1Stress(const InputParameters & parameters)
   : ComputeLagrangianStressPK1(parameters),
-    _uo(const_cast<FE2UserObject &>(getUserObject<FE2UserObject>("fe2_uo")))
+    _uo(const_cast<FE2UserObject &>(getUserObject<FE2UserObject>("fe2_uo"))),
+    _uo_F_pk1(const_cast<DeformationGradientPK1StressUserObject &>(
+        getUserObject<DeformationGradientPK1StressUserObject>("f_pk1_uo")))
 {
 }
 
@@ -35,6 +39,12 @@ FE2PK1Stress::computeQpPK1Stress()
 
   const RankTwoTensor F = _F[_qp];
   _pk1_stress[_qp] = microscalePK1Stress(F);
+
+  // update F and PK1
+  dof_id_type element_id = _current_elem->id();
+  _uo_F_pk1.F_P[element_id].resize(_q_point.size());
+
+  _uo_F_pk1.F_P[element_id][_qp] = {F, _pk1_stress[_qp]};
 
   if (_fe_problem.currentlyComputingJacobian())
   {

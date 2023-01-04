@@ -4,6 +4,7 @@ L = 1
 n = 5
 n_micro = 5
 h = '${fparse L/n}'
+sample = 0
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
@@ -73,6 +74,7 @@ h = '${fparse L/n}'
   [stress]
     type = FE2PK1Stress
     fe2_uo = fe2
+    f_pk1_uo = fp
   []
   [compute_strain]
     type = ComputeLagrangianStrain
@@ -107,6 +109,11 @@ h = '${fparse L/n}'
   [fe2]
     type = FE2UserObject
   []
+  [fp]
+    type = DeformationGradientPK1StressUserObject
+    file_name = "data/FP_${sample}.csv"
+    execute_on = TIMESTEP_END
+  []
 []
 
 [MultiApps]
@@ -114,7 +121,7 @@ h = '${fparse L/n}'
     type = MicroScaleMultiApp
     input_files = 'square_homo_dbc.i'
     max_procs_per_app = 1
-    cli_args = 'h=${h};n=${n_micro}'
+    cli_args = 'h=${h};n=${n_micro};sample=${sample}'
   []
 []
 
