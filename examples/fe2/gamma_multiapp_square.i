@@ -1,10 +1,10 @@
 # Simple 2D test
 
 L = 1
-n = 8
-n_micro = 8
+# n = 2
+# n_micro = 2
 h = '${fparse L/n}'
-sample = 0
+# sample = 0
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
@@ -103,6 +103,7 @@ sample = 0
 
 [Outputs]
   exodus = true
+  file_base = './output/sample_${sample}'
 []
 
 [UserObjects]
