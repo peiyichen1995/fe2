@@ -16,6 +16,7 @@ public:
   virtual void finalize() override;
 
   std::map<dof_id_type, std::vector<std::pair<RankTwoTensor, RankTwoTensor>>> F_P;
+  // std::map<dof_id_type, std::vector<std::vector<double>>> coords;
 
 protected:
   std::string _file_name;

@@ -46,6 +46,10 @@ FE2PK1Stress::computeQpPK1Stress()
 
   _uo_F_pk1.F_P[element_id][_qp] = {F, _pk1_stress[_qp]};
 
+  // update coordinates
+  // _uo_F_pk1.coords[element_id].resize(_q_point.size());
+  // _uo_F_pk1.coords[element_id][_qp] = {_q_point[_qp](0), _q_point[_qp](1), _q_point[_qp](2)};
+
   if (_fe_problem.currentlyComputingJacobian())
   {
 

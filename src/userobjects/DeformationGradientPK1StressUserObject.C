@@ -39,6 +39,7 @@ DeformationGradientPK1StressUserObject::finalize()
     {
       value[i].first.write_unformatted(_file, false);
       value[i].second.write_unformatted(_file, false);
+      // _file << coords[key][i][0] << " " << coords[key][i][1] << " " << coords[key][i][2] << " ";
       _file << '\n';
     }
   }

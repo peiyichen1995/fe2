@@ -8,8 +8,8 @@ fnames = glob.glob("visualization/out_step_1_*.e")
 outname = "stitched_random_field.png"
 # lb = 9000
 # ub = 10000
-lb = 4000
-ub = 4005
+lb = 63000
+ub = 26000
 resolution = [1200, 800]
 field_name = "gamma"
 
