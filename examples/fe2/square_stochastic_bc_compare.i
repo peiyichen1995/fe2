@@ -40,31 +40,33 @@ sample = 0
   []
 []
 
+[Functions]
+  [ux]
+    type = ParsedFunction
+    value = '((Fxx - 1) * x + Fxy * y) * t'
+    vars = 'Fxx Fxy'
+    vals = '${Fxx} ${Fxy}'
+  []
+  [uy]
+    type = ParsedFunction
+    value = '((Fyy - 1) * y + Fyx * x) * t'
+    vars = 'Fyy Fyx'
+    vals = '${Fyy} ${Fyx}'
+  []
+[]
+
 [BCs]
-  [leftx]
-    type = DirichletBC
-    boundary = left
-    variable = disp_x
-    value = 0.0
-  []
-  [lefty]
-    type = DirichletBC
-    boundary = left
-    variable = disp_y
-    value = 0.0
-  []
-  [pull_x]
+  [x]
     type = FunctionDirichletBC
-    boundary = right
+    boundary = 'left right top bottom'
     variable = disp_x
-    function = 't'
-    preset = false
+    function = ux
   []
-  [righty]
-    type = DirichletBC
-    boundary = right
+  [y]
+    type = FunctionDirichletBC
+    boundary = 'left right top bottom'
     variable = disp_y
-    value = 0.0
+    function = uy
   []
 []
 
@@ -80,8 +82,6 @@ sample = 0
     variable = gamma
     from_variable = gamma
     execute_on = 'LINEAR'
-    # scale_factor = 100
-    # add_factor = 9000
   []
 []
 
@@ -99,9 +99,7 @@ sample = 0
   [C]
     type = CustomIsotropicElasticityTensor
     lambda = 'gamma'
-    shear_modulus = 6700
-    # lambda = 40000
-    # shear_modulus = 10000
+    shear_modulus = 10000
   []
   [compute_stress]
     type = ComputeStVenantKirchhoffStress
