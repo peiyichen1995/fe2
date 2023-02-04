@@ -121,7 +121,7 @@ sample = 0
   nl_abs_tol = 1e-8
   start_time = 0.0
   dt = 0.01
-  end_time = 0.05
+  end_time = 0.2
 
   [Predictor]
     type = SimplePredictor

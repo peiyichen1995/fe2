@@ -9,13 +9,13 @@
 [UserObjects]
   [fe2]
     type = SolutionUserObject
-    mesh = 'gamma_multiapp_square_out.e'
+    mesh = 'square_stochastic_bc_compare_out.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
   []
   [macro]
     type = SolutionUserObject
-    mesh = 'gamma_square_out.e'
+    mesh = 'output/sample_0.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
   []
