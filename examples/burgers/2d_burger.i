@@ -1,4 +1,4 @@
-Re = 1000
+Re = 10000
 mu = 0.25
 [GlobalParams]
   velocities = 'vel_x vel_y'
@@ -13,8 +13,8 @@ mu = 0.25
     xmax = 1
     ymin = 0
     ymax = 1
-    nx = 100
-    ny = 100
+    nx = 60
+    ny = 60
   []
   second_order = true
 []
