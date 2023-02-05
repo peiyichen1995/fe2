@@ -16,5 +16,5 @@ protected:
   std::vector<const ADVariableValue *> _velocity_dots;
   const Real _nu;
   std::vector<std::vector<ADReal>> _tau_supg;
-  const Real _r;
+  const Real _sigma_BDF;
 };

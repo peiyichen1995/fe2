@@ -2,6 +2,8 @@ Re = 1000
 
 [GlobalParams]
   velocities = 'v'
+  r = 2
+  nu = '${fparse 1/Re}'
 []
 
 [Mesh]
@@ -12,9 +14,11 @@ Re = 1000
     xmax = 2
     nx = 1000
   []
+  second_order = true
 []
 [Variables]
   [v]
+    order = SECOND
   []
 []
 [ICs]
@@ -25,20 +29,20 @@ Re = 1000
   []
 []
 [Kernels]
-  [burgers]
-    type = Burgers
+  [time]
+    type = SUPGTimeDerivative
     variable = v
     component = 0
-    Re = ${Re}
   []
-  [time]
-    type = TimeDerivative
+  [advection]
+    type = SUPGAdvection
     variable = v
+    component = 0
   []
-  [diff]
-    type = MatDiffusion
-    diffusivity = '${fparse 1/Re}'
+  [diffusion]
+    type = SUPGDiffusion
     variable = v
+    component = 0
   []
 []
 
