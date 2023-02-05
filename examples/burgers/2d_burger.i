@@ -1,8 +1,8 @@
-Re = 10000
-mu = 0.25
+Re = 1000
+mu = 0.3
 [GlobalParams]
   velocities = 'vel_x vel_y'
-  sigma_BDF = 2
+  sigma_BDF = 1
   nu = '${fparse 1/Re}'
 []
 [Mesh]
@@ -73,9 +73,9 @@ mu = 0.25
   []
 []
 [Executioner]
-  [TimeIntegrator]
-    type = BDF2
-  []
+  # [TimeIntegrator]
+  #   type = BDF2
+  # []
   type = Transient
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -ksp_type'
@@ -85,9 +85,9 @@ mu = 0.25
   # petsc_options_iname = '-pc_type -pc_hypre_type -ksp_type'
   # petsc_options_value = 'hypre boomeramg gmres'
   petsc_options = '-snes_converged_reason'
-  nl_abs_tol = 1e-7
+  nl_abs_tol = 1e-10
   nl_rel_tol = 1e-8
-  num_steps = 1500
+  num_steps = 500
   end_time = 2
 []
 [Outputs]

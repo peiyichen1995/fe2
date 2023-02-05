@@ -20,6 +20,6 @@ SUPGAdvection::computeQpResidual()
 {
   ADRealVectorValue u((*_velocities[0])[_qp], (*_velocities[1])[_qp], (*_velocities[2])[_qp]);
   ADReal r = (*_velocity_gradients[_component])[_qp] * u *
-             (_test[_i][_qp] + _tau_supg[_i][_qp] * u * _grad_test[_i][_qp]);
+             (_test[_i][_qp] + _tau_supg * u * _grad_test[_i][_qp]);
   return r;
 }
