@@ -70,6 +70,31 @@ h = '${fparse L/n}'
     variable = disp_y
     function = uy
   []
+  # [leftx]
+  #   type = DirichletBC
+  #   boundary = left
+  #   variable = disp_x
+  #   value = 0.0
+  # []
+  # [lefty]
+  #   type = DirichletBC
+  #   boundary = left
+  #   variable = disp_y
+  #   value = 0.0
+  # []
+  # [pull_y]
+  #   type = FunctionDirichletBC
+  #   boundary = right
+  #   variable = disp_y
+  #   function = '0.25 * t'
+  #   preset = false
+  # []
+  # [rightx]
+  #   type = DirichletBC
+  #   boundary = right
+  #   variable = disp_x
+  #   value = 0.0
+  # []
 []
 
 [Materials]
@@ -105,7 +130,7 @@ h = '${fparse L/n}'
 
 [Outputs]
   exodus = true
-  file_base = './output/sample_${sample}'
+  file_base = './output_500_scene_2/sample_${sample}'
 []
 
 [UserObjects]
@@ -114,7 +139,7 @@ h = '${fparse L/n}'
   []
   [fp]
     type = DeformationGradientPK1StressUserObject
-    file_name = "data/FP_${sample}.csv"
+    file_name = "data_500_scene_2/FP_${sample}.csv"
     execute_on = TIMESTEP_END
   []
 []

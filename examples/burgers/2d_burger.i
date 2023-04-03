@@ -1,5 +1,5 @@
 Re = 1000
-mu = 0.3
+mu = 0.25
 [GlobalParams]
   velocities = 'vel_x vel_y'
   sigma_BDF = 1
@@ -87,9 +87,10 @@ mu = 0.3
   petsc_options = '-snes_converged_reason'
   nl_abs_tol = 1e-10
   nl_rel_tol = 1e-8
-  num_steps = 500
+  num_steps = 1500
   end_time = 2
 []
 [Outputs]
+  file_base = 'mu_${mu}'
   exodus = true
 []
