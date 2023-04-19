@@ -349,7 +349,8 @@
 [Materials]
   [C]
     type = CustomIsotropicElasticityTensor
-    lambda = 'gamma'
+    # lambda = 'gamma'
+    lambda = 16000
     shear_modulus = 10000
   []
   [compute_stress]

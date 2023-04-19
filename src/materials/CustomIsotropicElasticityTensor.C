@@ -27,5 +27,5 @@ CustomIsotropicElasticityTensor::computeQpProperties()
   Real mu = _mu[_qp];
   Real E = (mu * (3 * lambda + 2 * mu)) / (lambda + mu);
   Real nu = lambda / (2 * (lambda + mu));
-  _C[_qp].fillFromInputVector({E, nu}, RankFourTensor::symmetric_isotropic);
+  _C[_qp].fillFromInputVector({E, nu}, RankFourTensor::symmetric_isotropic_E_nu);
 }

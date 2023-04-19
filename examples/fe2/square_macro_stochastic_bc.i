@@ -42,57 +42,70 @@ h = '${fparse L/n}'
   []
 []
 
-[Functions]
-  [ux]
-    type = ParsedFunction
-    value = '((Fxx - 1) * x + Fxy * y) * t'
-    vars = 'Fxx Fxy'
-    vals = '${Fxx} ${Fxy}'
-  []
-  [uy]
-    type = ParsedFunction
-    value = '((Fyy - 1) * y + Fyx * x) * t'
-    vars = 'Fyy Fyx'
-    vals = '${Fyy} ${Fyx}'
-  []
-[]
+# [Functions]
+#   [ux]
+#     type = ParsedFunction
+#     value = '((Fxx - 1) * x + Fxy * y) * t'
+#     vars = 'Fxx Fxy'
+#     vals = '${Fxx} ${Fxy}'
+#   []
+#   [uy]
+#     type = ParsedFunction
+#     value = '((Fyy - 1) * y + Fyx * x) * t'
+#     vars = 'Fyy Fyx'
+#     vals = '${Fyy} ${Fyx}'
+#   []
+# []
 
 [BCs]
-  [x]
-    type = FunctionDirichletBC
-    boundary = 'left right top bottom'
-    variable = disp_x
-    function = ux
-  []
-  [y]
-    type = FunctionDirichletBC
-    boundary = 'left right top bottom'
-    variable = disp_y
-    function = uy
-  []
-  # [leftx]
-  #   type = DirichletBC
-  #   boundary = left
+  # [x]
+  #   type = FunctionDirichletBC
+  #   boundary = 'left right top bottom'
   #   variable = disp_x
-  #   value = 0.0
+  #   function = ux
   # []
-  # [lefty]
-  #   type = DirichletBC
-  #   boundary = left
+  # [y]
+  #   type = FunctionDirichletBC
+  #   boundary = 'left right top bottom'
   #   variable = disp_y
-  #   value = 0.0
+  #   function = uy
   # []
-  # [pull_y]
+  [leftx]
+    type = DirichletBC
+    boundary = left
+    variable = disp_x
+    value = 0.0
+  []
+  [lefty]
+    type = DirichletBC
+    boundary = left
+    variable = disp_y
+    value = 0.0
+  []
+  [pull_y]
+    type = FunctionDirichletBC
+    boundary = right
+    variable = disp_y
+    function = '0.25 * t'
+    preset = false
+  []
+  [rightx]
+    type = DirichletBC
+    boundary = right
+    variable = disp_x
+    value = 0.0
+  []
+  # [pull_x]
   #   type = FunctionDirichletBC
   #   boundary = right
-  #   variable = disp_y
+  #   variable = disp_x
   #   function = '0.25 * t'
   #   preset = false
   # []
-  # [rightx]
+  # [righty]
   #   type = DirichletBC
   #   boundary = right
-  #   variable = disp_x
+  #   variable = disp_y
   #   value = 0.0
   # []
 []
@@ -130,7 +143,7 @@ h = '${fparse L/n}'
 
 [Outputs]
   exodus = true
-  file_base = './output_500_scene_2/sample_${sample}'
+  file_base = './output_BC_study/sample_${sample}'
 []
 
 [UserObjects]
@@ -139,7 +152,7 @@ h = '${fparse L/n}'
   []
   [fp]
     type = DeformationGradientPK1StressUserObject
-    file_name = "data_500_scene_2/FP_${sample}.csv"
+    file_name = "data_BC_study/FP_${sample}.csv"
     execute_on = TIMESTEP_END
   []
 []
