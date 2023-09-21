@@ -6,7 +6,7 @@
 //*
 //* Licensed under LGPL 2.1, please see LICENSE for details
 //* https://www.gnu.org/licenses/lgpl-2.1.html
-
+#ifdef LIBTORCH_ENABLED
 #include "TorchStress.h"
 
 registerMooseObject("fe2App", TorchStress);
@@ -50,3 +50,4 @@ TorchStress::computeQpPK1Stress()
                                    P_vals.index({1, 2}).item<double>(),
                                    P_vals.index({2, 2}).item<double>());
 }
+#endif

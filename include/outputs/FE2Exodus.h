@@ -16,7 +16,7 @@ public:
 
   FE2Exodus(const InputParameters & parameters);
 
-  virtual void output(const ExecFlagType & type) override;
+  virtual void output() override;
 
   size_t time_step;
 

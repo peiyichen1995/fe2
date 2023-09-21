@@ -284,15 +284,15 @@
     index_j = 2
   []
 
-  [gamma]
-    type = FE2SolutionAux
-    solution = stochastic_field
-    variable = gamma
-    from_variable = gamma
-    execute_on = 'LINEAR'
-    # scale_factor = 100
-    # add_factor = 9000
-  []
+  # [gamma]
+  #   type = FE2SolutionAux
+  #   solution = stochastic_field
+  #   variable = gamma
+  #   from_variable = gamma
+  #   execute_on = 'LINEAR'
+  #   # scale_factor = 100
+  #   # add_factor = 9000
+  # []
 []
 
 [Kernels]
@@ -338,20 +338,25 @@
   []
 []
 
-[UserObjects]
-  [stochastic_field]
-    type = FE2SolutionUserObject
-    mesh = 'gammas/gamma_${sample}.e'
-    execute_on = 'INITIAL'
-    timestep = 'LATEST'
-    translation_scalar_vars = 'transl_x transl_y transl_z'
-  []
-[]
+# [UserObjects]
+#   [stochastic_field]
+#     type = FE2SolutionUserObject
+#     mesh = 'gammas/gamma_${sample}.e'
+#     execute_on = 'INITIAL'
+#     timestep = 'LATEST'
+#     translation_scalar_vars = 'transl_x transl_y transl_z'
+#   []
+# []
 
 [Materials]
+  # [C]
+  #   type = CustomIsotropicElasticityTensor
+  #   lambda = 'gamma'
+  #   shear_modulus = 6700
+  # []
   [C]
-    type = CustomIsotropicElasticityTensor
-    lambda = 'gamma'
+    type = ComputeIsotropicElasticityTensor
+    lambda = 10000
     shear_modulus = 6700
   []
   [compute_stress]

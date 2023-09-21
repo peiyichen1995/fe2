@@ -14,9 +14,9 @@ FE2Exodus::validParams()
 FE2Exodus::FE2Exodus(const InputParameters & parameters) : Exodus(parameters) {}
 
 void
-FE2Exodus::output(const ExecFlagType & type)
+FE2Exodus::output()
 {
-  Exodus::output(type);
+  Exodus::output();
   clear();
 }
 

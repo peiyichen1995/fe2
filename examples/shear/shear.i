@@ -1,10 +1,7 @@
 # Simple 2D test
 
-L = 1
-# n = 2
-# n_micro = 2
-h = '${fparse L/n}'
-# sample = 0
+L = 3
+n = 100
 
 [GlobalParams]
   displacements = 'disp_x disp_y'
@@ -70,11 +67,16 @@ h = '${fparse L/n}'
   []
 []
 
+
+
 [Materials]
-  [stress]
-    type = FE2PK1Stress
-    fe2_uo = fe2
-    f_pk1_uo = fp
+  [C]
+    type = ComputeIsotropicElasticityTensor
+    lambda = 40000
+    shear_modulus = 10000
+  []
+  [compute_stress]
+    type = ComputeStVenantKirchhoffStress
   []
   [compute_strain]
     type = ComputeLagrangianStrain
@@ -103,38 +105,4 @@ h = '${fparse L/n}'
 
 [Outputs]
   exodus = true
-  file_base = './output/sample_${sample}'
-[]
-
-[UserObjects]
-  [fe2]
-    type = FE2UserObject
-  []
-  [fp]
-    type = DeformationGradientPK1StressUserObject
-    file_name = "data/FP_${sample}.csv"
-    execute_on = TIMESTEP_END
-  []
-[]
-
-[MultiApps]
-  [sub]
-    type = MicroScaleMultiApp
-    input_files = 'square_homo_dbc.i'
-    max_procs_per_app = 1
-    cli_args = 'h=${h};n=${n_micro}'
-  []
-[]
-
-[Transfers]
-  [FE2_transfer]
-    type = FE2Transfer
-    fe2_uo = fe2
-    def_grad_scalars = 'hvar_target_xx hvar_target_xy hvar_target_xz hvar_target_yx hvar_target_yy hvar_target_yz hvar_target_zx hvar_target_zy hvar_target_zz'
-    translation_scalars = 'transl_x transl_y'
-    pk1_stress_components = 's11 s12 s13 s21 s22 s23 s31 s32 s33'
-    FE2Exodus_name = 'exo'
-    to_multi_app = sub
-    from_multi_app = sub
-  []
 []
