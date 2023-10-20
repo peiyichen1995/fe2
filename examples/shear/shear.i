@@ -67,12 +67,35 @@ n = 100
   []
 []
 
+[AuxVariables]
+  [gamma]
+  []
+[]
 
+[AuxKernels]
+  [gamma]
+    type = FE2SolutionAux
+    solution = stochastic_field
+    variable = gamma
+    from_variable = gamma
+    execute_on = 'LINEAR'
+  []
+[]
+
+[UserObjects]
+  [stochastic_field]
+    type = FE2SolutionUserObject
+    mesh = 'gammas/sample_${sample}.e'
+    execute_on = 'INITIAL'
+    timestep = 'LATEST'
+    translation_scalar_vars = '0 0 0'
+  []
+[]
 
 [Materials]
   [C]
-    type = ComputeIsotropicElasticityTensor
-    lambda = 40000
+    type = CustomIsotropicElasticityTensor
+    lambda = 'gamma'
     shear_modulus = 10000
   []
   [compute_stress]
@@ -95,7 +118,7 @@ n = 100
   nl_abs_tol = 1e-8
   start_time = 0.0
   dt = 0.01
-  end_time = 0.05
+  end_time = 0.1
 
   [Predictor]
     type = SimplePredictor
@@ -105,4 +128,5 @@ n = 100
 
 [Outputs]
   exodus = true
+  file_base = 'BCs/sample_${sample}'
 []

@@ -1,8 +1,5 @@
 # Simple 2D test
 
-L = 1
-h = '${fparse L/n}'
-
 [GlobalParams]
   displacements = 'disp_x disp_y'
   large_kinematics = true
@@ -79,11 +76,39 @@ h = '${fparse L/n}'
   []
 []
 
+[AuxVariables]
+  [gamma]
+  []
+[]
+
+[AuxKernels]
+  [gamma]
+    type = FE2SolutionAux
+    solution = stochastic_field
+    variable = gamma
+    from_variable = gamma
+    execute_on = 'LINEAR'
+  []
+[]
+
+[UserObjects]
+  [stochastic_field]
+    type = FE2SolutionUserObject
+    mesh = 'gammas/sample_${sample}.e'
+    execute_on = 'INITIAL'
+    timestep = 'LATEST'
+    translation_scalar_vars = '0 0 0'
+  []
+[]
+
 [Materials]
-  [stress]
-    type = FE2PK1Stress
-    fe2_uo = fe2
-    f_pk1_uo = fp
+  [C]
+    type = CustomIsotropicElasticityTensor
+    lambda = 'gamma'
+    shear_modulus = 10000
+  []
+  [compute_stress]
+    type = ComputeStVenantKirchhoffStress
   []
   [compute_strain]
     type = ComputeLagrangianStrain
@@ -112,38 +137,5 @@ h = '${fparse L/n}'
 
 [Outputs]
   exodus = true
-  file_base = 'outputs/sample_${sample}'
-[]
-
-[UserObjects]
-  [fe2]
-    type = FE2UserObject
-  []
-  [fp]
-    type = DeformationGradientPK1StressUserObject
-    file_name = "datas/FP_${sample}.csv"
-    execute_on = TIMESTEP_END
-  []
-[]
-
-[MultiApps]
-  [sub]
-    type = MicroScaleMultiApp
-    input_files = 'micro.i'
-    max_procs_per_app = 1
-    cli_args = 'h=${h};n=${n_micro};sample=${sample}'
-  []
-[]
-
-[Transfers]
-  [FE2_transfer]
-    type = FE2Transfer
-    fe2_uo = fe2
-    def_grad_scalars = 'hvar_target_xx hvar_target_xy hvar_target_xz hvar_target_yx hvar_target_yy hvar_target_yz hvar_target_zx hvar_target_zy hvar_target_zz'
-    translation_scalars = 'transl_x transl_y'
-    pk1_stress_components = 's11 s12 s13 s21 s22 s23 s31 s32 s33'
-    FE2Exodus_name = 'exo'
-    to_multi_app = sub
-    from_multi_app = sub
-  []
+  file_base = 'refs/sample_${sample}'
 []
