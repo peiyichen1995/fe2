@@ -44,7 +44,7 @@ h = '${fparse L/n}'
 [UserObjects]
   [sol]
     type = SolutionUserObject
-    mesh = 'BCs/sample_${sample}.e'
+    mesh = 'BCs/scene2/sample_${sample}.e'
     # translation = '-1 -1 0 '
   []
 []
@@ -112,7 +112,7 @@ h = '${fparse L/n}'
 
 [Outputs]
   exodus = true
-  file_base = 'outputs/sample_${sample}'
+  file_base = 'outputs/scene2/sample_${sample}'
 []
 
 [UserObjects]
@@ -121,7 +121,7 @@ h = '${fparse L/n}'
   []
   [fp]
     type = DeformationGradientPK1StressUserObject
-    file_name = "datas/FP_${sample}.csv"
+    file_name = "datas/scene2/FP_${sample}.csv"
     execute_on = TIMESTEP_END
   []
 []

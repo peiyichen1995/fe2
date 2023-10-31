@@ -339,7 +339,7 @@
 [UserObjects]
   [stochastic_field]
     type = FE2SolutionUserObject
-    mesh = 'gammas/sample_${sample}.e'
+    mesh = 'gammas/scene2/sample_${sample}.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
     translation_scalar_vars = 'transl_x transl_y transl_z'
