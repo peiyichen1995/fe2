@@ -6,20 +6,20 @@
     ymin = 1
     xmax = 2
     ymax = 2
-    nx = 10
-    ny = 10
+    nx = 5
+    ny = 5
   []
 []
 [UserObjects]
   [fe2]
     type = SolutionUserObject
-    mesh = 'outputs/sample_0.e'
+    mesh = 'outputs/scene2/sample_${sample}.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
   []
   [macro]
     type = SolutionUserObject
-    mesh = 'BCs/sample_0.e'
+    mesh = 'BCs/scene2/sample_${sample}.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
   []
@@ -108,6 +108,11 @@
 [Problem]
   solve = false
 []
+
 [Outputs]
-  exodus = true
+  [csv]
+    type = CSV
+    execute_on = 'TIMESTEP_END'
+    file_base = 'l2-norm/scene2/sample_${sample}'
+  []
 []
