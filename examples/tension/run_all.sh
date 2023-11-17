@@ -6,7 +6,7 @@ for L in {0..499}; do
   echo $L
   ../../fe2-opt -i main.i n=5 n_micro=5 sample=$L 2> err_output/$L.txt > command_output/$L.txt &
   (( COUNTER ++ ))
-  if [ $COUNTER = 60 ]; then
+  if [ $COUNTER = 70 ]; then
     wait
     COUNTER=0
     (( INLOOPCOUNTER ++ ))
