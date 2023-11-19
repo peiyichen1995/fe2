@@ -52,21 +52,18 @@
 [BCs]
   [leftx]
     type = DirichletBC
-    preset = true
     boundary = left
     variable = disp_x
     value = 0.0
   []
   [boty]
     type = DirichletBC
-    preset = true
     boundary = bottom
     variable = disp_y
     value = 0.0
   []
   [backz]
     type = DirichletBC
-    preset = true
     boundary = back
     variable = disp_z
     value = 0.0
@@ -77,6 +74,7 @@
     boundary = right
     variable = disp_x
     function = strain
+    preset = false
   []
 []
 
@@ -91,7 +89,8 @@
   # []
   [stress]
     type = TorchStress
-    script = 'PK1.pt'
+    PK1_script = 'PK1.pt'
+    dPK1_script = 'dPK1.pt'
   []
   [compute_strain]
     type = ComputeLagrangianStrain
@@ -115,23 +114,19 @@
 [Executioner]
   type = Transient
 
-  # solve_type = 'newton'
-  solve_type = FD
+  solve_type = NEWTON
   line_search = none
 
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
 
-  l_max_its = 2
-  l_tol = 1e-14
-  nl_max_its = 10
+  nl_max_its = 50
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
 
-  start_time = 0.0
-  dt = 1.0
-  dtmin = 1.0
-  end_time = 1.0
+  dt = 0.01
+  end_time = 0.1
+  num_steps = 2
 []
 
 [Outputs]
