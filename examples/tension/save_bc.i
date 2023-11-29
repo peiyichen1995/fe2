@@ -27,7 +27,7 @@
 [UserObjects]
   [sol]
     type = SolutionUserObject
-    mesh = 'BCs/scene2/sample_${sample}.e'
+    mesh = '../../../../../data0/pc178/fe2/BCs/scene2_nov/sample_${sample}.e'
     timestep = 'LATEST'
     execute_on = 'INITIAL'
   []
@@ -58,7 +58,7 @@
   [csv]
     type = CSV
     execute_on = 'INITIAL'
-    file_base = 'BCs_csv/scene2/sample_${sample}_'
+    file_base = '../../../../../data0/pc178/fe2/BCs_csv/scene2_nov/sample_${sample}_'
   []
 []
 

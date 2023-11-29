@@ -111,8 +111,8 @@ h = '${fparse L/n}'
 []
 
 [Outputs]
-  exodus = true
-  file_base = '../../../../../data0/pc178/fe2/outputs/scene2_nov/sample_${sample}'
+  exodus = false
+  # file_base = '../../../../../data0/pc178/fe2/outputs/scene2_nov/sample_${sample}'
 []
 
 [UserObjects]
