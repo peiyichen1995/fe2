@@ -23,5 +23,6 @@ public:
 protected:
   /// Wrap PK2 -> PK1
   virtual void computeQpPK1Stress() override;
-  torch::jit::script::Module module;
+  torch::jit::script::Module _pk1;
+  torch::jit::script::Module _dpk1;
 };
