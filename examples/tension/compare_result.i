@@ -13,13 +13,13 @@
 [UserObjects]
   [fe2]
     type = SolutionUserObject
-    mesh = 'outputs/scene2/sample_${sample}.e'
+    mesh = '../../../../../data0/pc178/fe2/outputs/scene2/sample_${sample}.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
   []
   [macro]
     type = SolutionUserObject
-    mesh = 'BCs/scene2/sample_${sample}.e'
+    mesh = '../../../../../data0/pc178/fe2/BCs/scene2/sample_${sample}.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
   []

@@ -85,7 +85,7 @@ n = 100
 [UserObjects]
   [stochastic_field]
     type = FE2SolutionUserObject
-    mesh = '../../../../../data0/pc178/fe2/gammas/scene2_nov/sample_${sample}.e'
+    mesh = '../../../../../data0/pc178/fe2/gammas/scene2_5k/sample_${sample}.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
     translation_scalar_vars = '0 0 0'
@@ -128,5 +128,5 @@ n = 100
 
 [Outputs]
   exodus = true
-  file_base = '../../../../../data0/pc178/fe2/BCs/scene2_nov/sample_${sample}'
+  file_base = '../../../../../data0/pc178/fe2/BCs/scene2_5k/sample_${sample}'
 []

@@ -339,7 +339,7 @@
 [UserObjects]
   [stochastic_field]
     type = FE2SolutionUserObject
-    mesh = '../../../../../data0/pc178/fe2/gammas/scene2_nov/sample_${sample}.e'
+    mesh = '../../../../../data0/pc178/fe2/gammas/scene2_5k/sample_${sample}.e'
     execute_on = 'INITIAL'
     timestep = 'LATEST'
     translation_scalar_vars = 'transl_x transl_y transl_z'
